@@ -7,9 +7,9 @@ attr_reader :value, :children, :parent
     @parent, @children = nil, []
   end 
 
-  def inspect
-    @value
-  end 
+  # def inspect
+  #   { 'value' => @value, 'parent_value' => @parent.value }.inspect
+  # end
 
   def parent
     @parent

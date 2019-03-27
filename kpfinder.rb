@@ -34,6 +34,7 @@ attr_reader :root_node, :considered_positions
       poss_y = [-2,-2,-1,1,2,2,-1,1]
       pos = node.value
       new_positions = []
+      # debugger 
       poss_x.zip(poss_y) do |x_pos, y_pos|
         new_pos = [pos.first + x_pos, pos.last + y_pos]
         if considered_positions(new_pos) && KPFinder.valid_moves(new_pos)
@@ -47,33 +48,33 @@ attr_reader :root_node, :considered_positions
     end 
 
     def considered_positions(pos)
+      # debugger 
       @considered_positions.each do |tile|
         return false if tile.value == pos
       end 
       true 
     end 
 
-  def find_path(end_pos)
-    debugger 
-    return end_pos if end_pos == @start_pos
-    path = []
-    parent = (find_path(trace_path_back(end_pos)))
-    path << parent 
-    path.map {|tile| tile.value}
+  def find_path(root=@root_node, end_pos)
+    # return nil if root.nil? 
+    return trace_path_back(root) if root.value == end_pos
+    root.children.each do |child|
+      search_result = find_path(child, end_pos)
+      p search_result unless search_result.nil? 
+    end
+    nil
   end 
 
-  def trace_path_back(pos)
+  def trace_path_back(end_pos)
     debugger 
-    @considered_positions.each do |tile|
-      return tile.parent if tile.value == pos
-    end 
-  # should return values in order from the start position to the end position
-  # Use to finish up find_path 
+    return end_pos.value if end_pos.parent.nil? 
+    path = [end_pos.value]
+    path.unshift(trace_path_back(end_pos.parent))
   end 
 end 
 
 
 if $PROGRAM_NAME == __FILE__
   kpf = KPFinder.new([0,0])
-  kpf.find_path([7,6])
+  kpf.find_path([7,7])
 end 
