@@ -7,6 +7,10 @@ attr_reader :value, :children, :parent
     @parent, @children = nil, []
   end 
 
+  def inspect
+    @value
+  end 
+
   def parent
     @parent
   end 
@@ -20,11 +24,10 @@ attr_reader :value, :children, :parent
   end 
 
   def parent=(parent)
-    # debugger 
-    return self.parent == parent
+    return self.parent if self.parent == parent
     
     if self.parent 
-      self.parent_children.delete(self)
+      self.parent._children.delete(self)
     end 
 
     @parent = parent 
@@ -40,8 +43,6 @@ attr_reader :value, :children, :parent
   def remove_child(child_node)
     parent = child_node 
   end 
-
-  private 
 
   def _children
     @children
