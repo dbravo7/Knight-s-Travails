@@ -2,7 +2,7 @@ require "byebug"
 require_relative "ptnode"
 class KPFinder
 
-attr_reader :root_node, :considered_positions
+attr_reader :root_node, :considered_positions, :target
 
     def self.valid_moves(pos)
       x, y = pos 
@@ -13,46 +13,43 @@ attr_reader :root_node, :considered_positions
     end    
 
     def initialize(start, target)
-      debugger
+      @target = target 
       @root_node = PolyTreeNode.new(start)
       @considered_positions = [start]
-      build_move_tree(@root_node.value, target)
+      build_move_tree([@root_node.value], target)
     end 
 
-    def build_move_tree(root, target)
-      queue = [root]
-
-      loop do  
+    def build_move_tree(start_pos, target)
+      queue = start_pos
+      until queue.nil? 
         pos = queue.pop 
-        break if pos == nil
         break if pos == target 
-
-        queue << new_move_positions(pos).nil?
+        debugger 
+        queue = new_move_positions(pos) + queue 
       end 
-      # debugger 
-     queue 
+      queue 
     end 
 
     def new_move_positions(pos)
       poss_x = [-1,1,-2,-2,-1,1,2,2]
       poss_y = [-2,-2,-1,1,2,2,-1,1]
       new_positions = []
-      
+    debugger 
       poss_x.zip(poss_y) do |x_pos, y_pos|
         new_pos = [pos.first + x_pos, pos.last + y_pos]
         if !@considered_positions.include?(new_pos) && KPFinder.valid_moves(new_pos)
             node = PolyTreeNode.new(new_pos)
+            node.parent = pos 
             @considered_positions << node.value
             new_positions.unshift(node.value) 
         end 
       end 
-      new_positions  
-      debugger 
+      new_positions 
     end 
 
 end 
 
 
 if $PROGRAM_NAME == __FILE__
-  KPFinder.new([0,0], [3,3])
+  KPFinder.new([0,0], [7,7])
 end 
