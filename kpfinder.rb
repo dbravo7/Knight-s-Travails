@@ -60,16 +60,19 @@ attr_reader :root_node, :considered_positions
     return trace_path_back(root) if root.value == end_pos
     root.children.each do |child|
       search_result = find_path(child, end_pos)
-      p search_result unless search_result.nil? 
+      p search_result unless search_result.nil?
     end
     nil
   end 
 
   def trace_path_back(end_pos)
-    debugger 
-    return end_pos.value if end_pos.parent.nil? 
     path = [end_pos.value]
-    path.unshift(trace_path_back(end_pos.parent))
+    node = end_pos.parent
+    until node.nil? 
+      path.unshift(node.value)
+      node = node.parent
+    end 
+    path 
   end 
 end 
 
